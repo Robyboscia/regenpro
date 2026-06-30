@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REGEN PRO — Il protocollo Day/Night per il tuo recupero</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..500;1,9..40,300..500&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:       #07090D;
+      --surface:  #0C1018;
+      --card:     #111822;
+      --border:   rgba(200,147,58,0.12);
+      --border-w: rgba(200,147,58,0.28);
+      --text:     #EDE9E3;
+      --muted:    #7A7572;
+      --subtle:   #4A4844;
+      --gold:     #C8933A;
+      --gold-l:   #E8B85A;
+      --gold-dim: rgba(200,147,58,0.14);
+      --ff-d: 'Fraunces', 'Georgia', serif;
+      --ff-b: 'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-b);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--ff-d);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .glow-blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+    }
+
+    .container      { max-width: 860px;  margin: 0 auto; padding: 0 5%; }
+    .container-wide { max-width: 1100px; margin: 0 auto; padding: 0 5%; }
+
+    section { position: relative; overflow: hidden; }
+
+    .section-tag {
+      display: inline-block;
+      font-family: var(--ff-b);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.85rem;
+    }
+
+    .divider {
+      width: 50px; height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 1.5rem 0;
+    }
+
+    /* BUTTONS */
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-l));
+      color: #07090D;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 4px;
+      font-family: var(--ff-b);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 40px rgba(200,147,58,0.28);
+      text-decoration: none;
+    }
+    .btn-gold:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 0 60px rgba(200,147,58,0.45); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-w);
+      padding: 1rem 2.5rem;
+      border-radius: 4px;
+      font-family: var(--ff-b);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+    .btn-ghost:hover { border-color: var(--gold); background: var(--gold-dim); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.2rem 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(7,9,13,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .nav-brand {
+      font-family: var(--ff-d);
+      font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em;
+      color: var(--gold); text-decoration: none;
+    }
+    .nav-brand span {
+      font-size: 0.7rem; font-family: var(--ff-b);
+      letter-spacing: 0.12em; color: var(--muted);
+      display: block; margin-top: -0.15rem;
+    }
+    nav .btn-gold { padding: 0.6rem 1.5rem; font-size: 0.85rem; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 8rem 5% 5rem;
+    }
+    #hero .blob1 {
+      width: 650px; height: 650px;
+      background: radial-gradient(circle, rgba(200,147,58,0.11) 0%, transparent 70%);
+      top: 5%; left: 25%; transform: translate(-50%,-50%);
+    }
+    #hero .blob2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(200,147,58,0.07) 0%, transparent 70%);
+      top: 75%; left: 75%;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--border-w);
+      padding: 0.4rem 1.2rem; border-radius: 100px;
+      display: inline-block; margin-bottom: 2rem;
+      opacity: 0;
+    }
+    #hero h1 {
+      font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+      font-weight: 500; font-style: italic;
+      max-width: 840px; opacity: 0;
+    }
+    #hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--gold), var(--gold-l));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-line {
+      width: 1px; height: 70px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      margin: 2.5rem auto; opacity: 0;
+    }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--muted);
+      max-width: 540px; line-height: 1.8; opacity: 0;
+    }
+    .hero-actions {
+      margin-top: 2.5rem;
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      opacity: 0;
+    }
+    .hero-stats {
+      margin-top: 4rem;
+      display: flex; gap: 3.5rem; justify-content: center; flex-wrap: wrap;
+      opacity: 0;
+    }
+    .stat-num {
+      font-family: var(--ff-d);
+      font-size: 2.4rem; font-weight: 600;
+      color: var(--gold); letter-spacing: -0.03em;
+    }
+    .stat-lbl { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── PROBLEMA ── */
+    #problema { padding: 7rem 5%; background: var(--surface); }
+
+    .prose { font-size: 1.05rem; line-height: 2; color: var(--text); }
+    .prose p { margin-bottom: 1.25rem; }
+    .frase { display: block; margin-bottom: 0.35rem; color: var(--muted); }
+
+    .pull-quote {
+      font-family: var(--ff-d);
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      font-weight: 500; font-style: italic;
+      border-left: 3px solid var(--gold);
+      padding: 1.25rem 0 1.25rem 2rem;
+      margin: 3rem 0; line-height: 1.45;
+      opacity: 0; transform: translateX(-20px);
+    }
+
+    /* ── DEBITO ── */
+    #debito { padding: 7rem 5%; }
+
+    .debito-intro { text-align: center; max-width: 680px; margin: 0 auto 5rem; }
+    .debito-intro h2 { font-size: clamp(2rem, 4vw, 3rem); font-style: italic; margin-top: 0.5rem; }
+
+    .debt-row {
+      display: grid; grid-template-columns: 110px 1fr 130px;
+      gap: 1.5rem; align-items: center;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0; transform: translateY(14px);
+    }
+    .debt-row:last-of-type { border-bottom: none; }
+    .debt-day-name { font-family: var(--ff-d); font-size: 1rem; font-weight: 500; }
+    .debt-bar-bg { height: 5px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; }
+    .debt-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--gold), #7A3010); }
+    .debt-note { font-size: 0.78rem; color: var(--muted); }
+
+    .debito-box {
+      max-width: 700px; margin: 4rem auto 0;
+      background: var(--card); border: 1px solid var(--border-w);
+      border-radius: 8px; padding: 2.5rem; text-align: center;
+      opacity: 0; transform: translateY(20px);
+    }
+    .debito-box h3 { font-family: var(--ff-d); font-size: 1.5rem; font-style: italic; margin-bottom: 0.85rem; }
+    .debito-box p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; max-width: 500px; margin: 0 auto; }
+
+    /* ── ERRORI ── */
+    #errori { padding: 7rem 5%; background: var(--surface); }
+
+    .errori-hd { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+    .errori-hd h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-style: italic; margin-top: 0.5rem; }
+
+    .errori-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      gap: 1.5rem; max-width: 1000px; margin: 0 auto;
+    }
+    .errore-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 2rem;
+      opacity: 0; transform: translateY(25px);
+      transition: border-color 0.3s;
+    }
+    .errore-card:hover { border-color: var(--border-w); }
+    .errore-num { font-family: var(--ff-d); font-size: 3rem; font-weight: 600; color: var(--border-w); line-height: 1; margin-bottom: 1rem; }
+    .errore-card h3 { font-size: 1.05rem; margin-bottom: 0.6rem; }
+    .errore-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.75; }
+
+    /* ── SOLUZIONE ── */
+    #soluzione { padding: 7rem 5%; }
+
+    .sol-hd { text-align: center; max-width: 700px; margin: 0 auto 5rem; }
+    .sol-hd h2 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-style: italic; margin-top: 0.5rem; }
+    .sol-hd p { color: var(--muted); font-size: 0.98rem; line-height: 1.85; margin-top: 1rem; }
+
+    .dn-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border-w); border-radius: 12px; overflow: hidden;
+      max-width: 1050px; margin: 0 auto;
+    }
+    .dn-panel { padding: 3.5rem; opacity: 0; transform: translateY(20px); }
+    .dn-panel.day  { background: linear-gradient(145deg, #0D1520, #121D30); border-right: 1px solid var(--border); }
+    .dn-panel.night { background: linear-gradient(145deg, #07090F, #0A1020); }
+    .dn-lbl { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .dn-lbl.day   { color: #E8B85A; }
+    .dn-lbl.night { color: #8B9DC3; }
+    .dn-icon { font-size: 2rem; display: block; margin-bottom: 1rem; }
+    .dn-panel h3 { font-family: var(--ff-d); font-size: 1.9rem; font-style: italic; margin-bottom: 1rem; }
+    .dn-panel p  { color: var(--muted); font-size: 0.88rem; line-height: 1.8; margin-bottom: 1.5rem; }
+    .dn-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .dn-tag { font-size: 0.72rem; padding: 0.3rem 0.85rem; border-radius: 100px; border: 1px solid; }
+    .dn-tag.day   { border-color: rgba(232,184,90,0.3); color: #E8B85A; background: rgba(232,184,90,0.07); }
+    .dn-tag.night { border-color: rgba(139,157,195,0.3); color: #8B9DC3; background: rgba(139,157,195,0.07); }
+
+    /* ── ASPETTATI ── */
+    #aspettati { padding: 7rem 5%; background: var(--surface); }
+
+    .asp-hd { text-align: center; max-width: 700px; margin: 0 auto 4.5rem; }
+    .asp-hd h2 { font-size: clamp(2rem, 4vw, 3rem); font-style: italic; margin-top: 0.5rem; }
+
+    .timeline { display: flex; flex-direction: column; max-width: 700px; margin: 3.5rem auto 0; }
+    .tl-item {
+      display: grid; grid-template-columns: 130px 1fr;
+      gap: 2rem; position: relative;
+      opacity: 0; transform: translateY(18px);
+    }
+    .tl-item:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 55px; top: 34px; bottom: -18px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    .tl-marker { display: flex; flex-direction: column; align-items: flex-end; padding-bottom: 2.5rem; padding-top: 0.2rem; }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); }
+    .tl-period { font-size: 0.72rem; color: var(--gold); font-weight: 500; margin-top: 0.4rem; text-align: right; }
+    .tl-body { padding-bottom: 2.5rem; }
+    .tl-body h4 { font-family: var(--ff-d); font-size: 1.05rem; font-style: italic; margin-bottom: 0.45rem; }
+    .tl-body p  { color: var(--muted); font-size: 0.88rem; line-height: 1.75; }
+
+    .disclaimer-box {
+      max-width: 700px; margin: 3.5rem auto 0;
+      background: var(--card); border: 1px solid var(--border-w);
+      border-radius: 8px; padding: 1.75rem 2rem; text-align: center;
+      opacity: 0; transform: translateY(18px);
+    }
+    .disclaimer-box p { color: var(--muted); font-size: 0.82rem; line-height: 1.8; }
+    .disclaimer-box strong { color: var(--text); }
+
+    /* ── TESTIMONIANZE ── */
+    #testimonianze { padding: 7rem 5%; }
+
+    .testi-hd { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+    .testi-hd h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-style: italic; margin-top: 0.5rem; }
+    .testi-hd p  { color: var(--muted); font-size: 0.92rem; line-height: 1.75; margin-top: 0.85rem; }
+
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+      gap: 1.5rem;
+    }
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 2.25rem;
+      min-height: 260px; display: flex; flex-direction: column;
+      opacity: 0; transform: translateY(22px);
+    }
+    .testi-card.ph {
+      align-items: center; justify-content: center;
+      text-align: center; border-style: dashed; border-color: var(--border-w);
+    }
+    .ph-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .testi-card.ph p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+    .testi-card.ph small { display: block; font-size: 0.75rem; color: var(--subtle); margin-top: 0.4rem; }
+
+    /* ── PER TE ── */
+    #per-te { padding: 7rem 5%; background: var(--surface); }
+
+    .per-te-hd { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+    .per-te-hd h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-style: italic; margin-top: 0.5rem; }
+
+    .per-te-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; max-width: 920px; margin: 0 auto;
+    }
+    .pt-panel {
+      background: var(--card); border-radius: 8px; padding: 2.5rem;
+      opacity: 0; transform: translateY(20px);
+    }
+    .pt-panel.si { border: 1px solid rgba(100,180,100,0.18); }
+    .pt-panel.no { border: 1px solid rgba(180,80,80,0.18); }
+    .pt-lbl { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; display: block; margin-bottom: 1.5rem; }
+    .pt-panel.si .pt-lbl { color: #6DB88C; }
+    .pt-panel.no .pt-lbl { color: #B85A5A; }
+    .pt-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+    .pt-list li { font-size: 0.88rem; color: var(--muted); line-height: 1.5; display: flex; gap: 0.7rem; align-items: flex-start; }
+    .pt-list li::before { flex-shrink: 0; margin-top: 0.05rem; font-weight: 700; }
+    .pt-panel.si .pt-list li::before { content: '✓'; color: #6DB88C; }
+    .pt-panel.no .pt-list li::before { content: '✕'; color: #B85A5A; }
+    .pt-note { color: var(--muted); font-size: 0.78rem; margin-top: 1.75rem; line-height: 1.75; }
+
+    /* ── COSA RICEVI ── */
+    #cosa-ricevi { padding: 7rem 5%; }
+
+    .ricevi-hd { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+    .ricevi-hd h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-style: italic; margin-top: 0.5rem; }
+
+    .ricevi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap: 1.1rem; max-width: 1000px; margin: 0 auto;
+    }
+    .r-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.4rem 1.6rem;
+      opacity: 0; transform: translateY(18px);
+      transition: border-color 0.3s;
+    }
+    .r-item:hover { border-color: var(--border-w); }
+    .r-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--gold-dim); border: 1px solid var(--border-w);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; color: var(--gold); font-weight: 700;
+      flex-shrink: 0;
+    }
+    .r-text { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+
+    /* ── FAQ ── */
+    #faq { padding: 7rem 5%; background: var(--surface); }
+
+    .faq-hd { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+    .faq-hd h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-style: italic; margin-top: 0.5rem; }
+
+    .faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 1px; }
+
+    .faq-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 6px; overflow: hidden;
+      opacity: 0; transform: translateY(14px);
+    }
+    .faq-q {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: 1.5rem 1.75rem;
+      background: none; border: none; color: var(--text);
+      font-family: var(--ff-b); font-size: 0.93rem; font-weight: 500;
+      text-align: left; cursor: pointer; transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--gold); }
+    .faq-icon { font-size: 1.2rem; color: var(--gold); transition: transform 0.3s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-item.open .faq-a { max-height: 400px; }
+    .faq-a-inner {
+      padding: 1.25rem 1.75rem 1.75rem;
+      color: var(--muted); font-size: 0.88rem; line-height: 1.85;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── GARANZIA ── */
+    #garanzia { padding: 6rem 5%; }
+    .gar-box {
+      max-width: 760px; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border-w);
+      border-radius: 12px; padding: 4rem 3rem; text-align: center;
+      opacity: 0; transform: translateY(22px);
+    }
+    .gar-badge {
+      width: 76px; height: 76px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-l));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin: 0 auto 1.75rem;
+    }
+    .gar-box h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-style: italic; margin-bottom: 1rem; }
+    .gar-box .divider { margin: 1.25rem auto; }
+    .gar-box p { color: var(--muted); font-size: 0.92rem; line-height: 1.9; max-width: 580px; margin: 0 auto; }
+
+    /* ── CTA FINALE ── */
+    #cta-finale { padding: 8rem 5%; background: var(--surface); position: relative; }
+    #cta-finale .blob-cta {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(200,147,58,0.09) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+    }
+    .cta-inner { max-width: 760px; margin: 0 auto; text-align: center; opacity: 0; transform: translateY(25px); position: relative; z-index: 1; }
+    .cta-inner h2 { font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-style: italic; margin-bottom: 2.5rem; }
+    .cta-prose { color: var(--muted); font-size: 0.98rem; line-height: 2; margin-bottom: 3rem; text-align: left; }
+    .cta-prose p { margin-bottom: 1rem; }
+    .cta-acts { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .cta-micro { font-size: 0.78rem; color: var(--subtle); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2.25rem 5%;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .ft-brand { font-family: var(--ff-d); font-size: 1rem; font-weight: 700; color: var(--gold); }
+    .ft-links { list-style: none; display: flex; gap: 1.5rem; }
+    .ft-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+    .ft-links a:hover { color: var(--text); }
+    .ft-copy { color: var(--subtle); font-size: 0.72rem; }
+
+    /* ANIM helpers */
+    .afu { opacity: 0; transform: translateY(28px); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .dn-grid { grid-template-columns: 1fr; }
+      .dn-panel.day { border-right: none; border-bottom: 1px solid var(--border); }
+      .per-te-grid { grid-template-columns: 1fr; }
+      .debt-row { grid-template-columns: 80px 1fr; }
+      .debt-note { display: none; }
+      .gar-box { padding: 2.5rem 1.5rem; }
+      footer { flex-direction: column; text-align: center; }
+      .ft-links { justify-content: center; }
+      nav .btn-gold { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-brand">
+      REGEN PRO
+      <span>Protocollo Day/Night</span>
+    </a>
+    <a href="#cta-finale" class="btn-gold">Ordina ora</a>
+  </nav>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section id="hero">
+    <div class="glow-blob blob1"></div>
+    <div class="glow-blob blob2"></div>
+
+    <div class="hero-eyebrow">Protocollo Day/Night per il recupero</div>
+
+    <h1>
+      Perché puoi dormire sette ore…<br>
+      <em>e svegliarti comunque<br>senza sentirti pronto?</em>
+    </h1>
+
+    <div class="hero-line"></div>
+
+    <p class="hero-sub">
+      Il problema non è che stai invecchiando.<br>
+      Il problema è che il tuo corpo non riesce più a rimettersi in pari come faceva prima.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#soluzione" class="btn-gold">Scopri REGEN PRO</a>
+      <a href="#problema" class="btn-ghost">Leggi la storia →</a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num" data-count="60">0</div>
+        <div class="stat-lbl">Giorni di garanzia</div>
+      </div>
+      <div>
+        <div class="stat-num">2</div>
+        <div class="stat-lbl">Formule complementari</div>
+      </div>
+      <div>
+        <div class="stat-num">9+</div>
+        <div class="stat-lbl">Ingredienti selezionati</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PROBLEMA ═══════════════ -->
+  <section id="problema">
+    <div class="container">
+      <div class="section-tag">Il problema</div>
+
+      <div class="prose">
+        <p>Lascia che te lo dica senza girarci intorno.</p>
+        <p>Lo senti appena apri gli occhi. La sveglia suona. Hai dormito. Magari anche sette ore piene.</p>
+        <p>Eppure resti lì. Con quella pesantezza dietro gli occhi. Le spalle già dure. La testa già piena prima ancora di alzarti.</p>
+        <p>Ti dici: <em>"Dai, appena mi muovo passa."</em> Poi vai in bagno.</p>
+      </div>
+
+      <div class="pull-quote">
+        "Ti guardi allo specchio.<br>
+        E per un secondo non riconosci la persona davanti.<br>
+        Non perché sia vecchia.<br>
+        Ma perché sembra già consumata."
+      </div>
+
+      <div class="prose">
+        <p>E allora fai quello che fanno tutti.</p>
+        <p>
+          <span class="frase">Caffè.</span>
+          <span class="frase">Doccia.</span>
+          <span class="frase">Notifiche. Email. Figli. Lavoro. Traffico. Scadenze.</span>
+        </p>
+        <p>Per qualche ora riesci anche a funzionare. Perché sei bravo a funzionare. Sei diventato esperto nel tirare avanti.</p>
+        <p>Ma verso sera arriva il conto. Entri in casa e dentro senti una frase che fa male.</p>
+      </div>
+
+      <div class="pull-quote">"Non ho più niente da dare."</div>
+
+      <div class="prose">
+        <p>Non è solo stanchezza. È presenza che sparisce. È pazienza che si accorcia. È voglia che si spegne.</p>
+        <p>Una volta bastava una notte. Poi serviva il weekend. Ora a volte non basta nemmeno quello.</p>
+        <p>E inizi a raccontarti la storia più comoda: <em>"Ho 45 anni. Ho 52 anni. È normale. È lo stress."</em></p>
+      </div>
+
+      <div class="pull-quote">Ma se fosse la spiegazione sbagliata?</div>
+
+      <div class="prose">
+        <p>Molte persone non stanno perdendo energia. Stanno perdendo <strong>capacità di recupero</strong>. E sono due cose molto diverse.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ DEBITO ═══════════════ -->
+  <section id="debito">
+    <div class="container">
+      <div class="debito-intro afu">
+        <div class="section-tag">Il concetto chiave</div>
+        <h2>Il Debito di Recupero</h2>
+        <p style="color:var(--muted); margin-top:1rem; font-size:0.98rem; line-height:1.85;">
+          Ogni giornata ti chiede qualcosa. Ogni sera il tuo corpo dovrebbe recuperare tutto quello che hai speso. Dovrebbe.
+        </p>
+      </div>
+
+      <div style="max-width:680px; margin:0 auto;">
+        <div class="debt-row"><div class="debt-day-name">Lunedì</div><div class="debt-bar-bg"><div class="debt-bar" style="width:15%"></div></div><div class="debt-note">Lasci qualcosa indietro</div></div>
+        <div class="debt-row"><div class="debt-day-name">Martedì</div><div class="debt-bar-bg"><div class="debt-bar" style="width:30%"></div></div><div class="debt-note">Si aggiunge altro</div></div>
+        <div class="debt-row"><div class="debt-day-name">Mercoledì</div><div class="debt-bar-bg"><div class="debt-bar" style="width:50%"></div></div><div class="debt-note">Stringi i denti</div></div>
+        <div class="debt-row"><div class="debt-day-name">Giovedì</div><div class="debt-bar-bg"><div class="debt-bar" style="width:68%"></div></div><div class="debt-note">Per inerzia</div></div>
+        <div class="debt-row"><div class="debt-day-name">Venerdì</div><div class="debt-bar-bg"><div class="debt-bar" style="width:86%"></div></div><div class="debt-note">Arrivi svuotato</div></div>
+        <div class="debt-row"><div class="debt-day-name">Weekend</div><div class="debt-bar-bg"><div class="debt-bar" style="width:58%"></div></div><div class="debt-note">Recuperi un po'</div></div>
+        <div class="debt-row"><div class="debt-day-name">Lunedì</div><div class="debt-bar-bg"><div class="debt-bar" style="width:68%"></div></div><div class="debt-note">Riparti già in debito</div></div>
+      </div>
+
+      <div class="debito-box">
+        <h3>Settimana dopo settimana, quel debito cresce.</h3>
+        <p>Non è una diagnosi medica. È una sensazione che tantissime persone riconoscono immediatamente: non riuscire più a ricaricarsi davvero. Non tornare mai completamente se stessi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ 3 ERRORI ═══════════════ -->
+  <section id="errori">
+    <div class="errori-hd afu">
+      <div class="section-tag">Gli errori più comuni</div>
+      <h2>Perché quello che fai<br>non funziona come dovrebbe</h2>
+    </div>
+    <div class="errori-grid container-wide">
+      <div class="errore-card">
+        <div class="errore-num">01</div>
+        <h3>Cercare più energia</h3>
+        <p>Un altro caffè. Un altro pre-workout. Ma spingere un corpo che non recupera è come continuare ad accelerare una macchina che non porti mai in officina. Puoi andare avanti ancora per un po'. Ma ogni chilometro costa di più.</p>
+      </div>
+      <div class="errore-card">
+        <div class="errore-num">02</div>
+        <h3>Pensare che dormire = recuperare</h3>
+        <p>Puoi stare otto ore a letto e svegliarti comunque con la sensazione che il corpo abbia lavorato tutta la notte. Il recupero non è semplicemente dormire. È un insieme di processi fisiologici complessi che avvengono mentre riposi.</p>
+      </div>
+      <div class="errore-card">
+        <div class="errore-num">03</div>
+        <h3>Trattare giorno e notte allo stesso modo</h3>
+        <p>La maggior parte degli integratori usa un'unica formula alla stessa ora, come se il corpo avesse gli stessi bisogni per 24 ore. Di giorno devi produrre energia. Di notte, invece, devi riparare e riequilibrare. Sono due lavori diversi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SOLUZIONE ═══════════════ -->
+  <section id="soluzione">
+    <div class="sol-hd container afu">
+      <div class="section-tag">La soluzione</div>
+      <h2>Da qui nasce REGEN PRO</h2>
+      <p>Non da un ingrediente di moda. Non da una promessa sensazionalistica. Ma da una domanda molto semplice: <em>se il corpo vive due fasi completamente diverse nell'arco della giornata, perché dovremmo trattarle allo stesso modo?</em></p>
+    </div>
+
+    <div class="container-wide">
+      <div class="dn-grid">
+        <div class="dn-panel day">
+          <div class="dn-lbl day">Formula diurna</div>
+          <span class="dn-icon">&#9728;&#65039;</span>
+          <h3>REGEN PRO DAY</h3>
+          <p>Non pensata per "caricarti". Studiata per sostenere i normali processi fisiologici coinvolti nel metabolismo energetico durante la fase attiva della giornata. Non per creare una sensazione momentanea. Ma per accompagnare il tuo organismo mentre gli chiedi di dare il massimo.</p>
+          <div class="dn-tags">
+            <span class="dn-tag day">Creatina</span>
+            <span class="dn-tag day">Coenzima Q10</span>
+            <span class="dn-tag day">Acetil-L-Carnitina</span>
+            <span class="dn-tag day">Niacinamide</span>
+          </div>
+        </div>
+        <div class="dn-panel night">
+          <div class="dn-lbl night">Formula notturna</div>
+          <span class="dn-icon">&#127769;</span>
+          <h3>REGEN PRO NIGHT</h3>
+          <p>Come possiamo aiutare il corpo nel momento in cui dovrebbe recuperare ciò che ha speso durante il giorno? Il recupero non è solo muscolare. Non è solo mentale. È un processo che coinvolge l'intero organismo. L'obiettivo è sostenere il contesto fisiologico nel quale il corpo svolge il suo lavoro più importante.</p>
+          <div class="dn-tags">
+            <span class="dn-tag night">Glicina</span>
+            <span class="dn-tag night">Magnesio</span>
+            <span class="dn-tag night">Taurina</span>
+            <span class="dn-tag night">L-Teanina</span>
+            <span class="dn-tag night">Inositolo</span>
+            <span class="dn-tag night">Colostro</span>
+            <span class="dn-tag night">Fucoidano</span>
+            <span class="dn-tag night">Beta-glucani</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ COSA ASPETTARSI ═══════════════ -->
+  <section id="aspettati">
+    <div class="asp-hd afu">
+      <div class="section-tag">Cosa aspettarsi</div>
+      <h2>Immagina di smettere<br>di iniziare ogni giornata<br>già in rincorsa</h2>
+    </div>
+
+    <div class="container">
+      <p style="color:var(--muted); font-size:1rem; line-height:2; margin-bottom:1rem;">Di alzarti senza doverti convincere che "tra dieci minuti passa". Di arrivare alle quattro del pomeriggio senza quel crollo improvviso. Di tornare a casa e avere ancora la lucidità per ascoltare chi hai davanti.</p>
+      <p style="color:var(--muted); font-size:1rem; line-height:2; margin-bottom:3.5rem;">Non perché sei diventato un'altra persona. Ma perché stai iniziando a recuperare una parte di quello che ogni giorno lasciavi indietro.</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-marker"><div class="tl-dot"></div><div class="tl-period">Giorni 1–7</div></div>
+          <div class="tl-body">
+            <h4>I primi segnali</h4>
+            <p>Presta attenzione al risveglio. Non cercare il cambiamento nel primo giorno — osserva come cambia la qualità del risveglio nei primi giorni di utilizzo.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-marker"><div class="tl-dot"></div><div class="tl-period">Settimane 2–4</div></div>
+          <div class="tl-body">
+            <h4>Stabilità durante il giorno</h4>
+            <p>Osserva quanto riesci a mantenere stabile la tua giornata. Meno picchi. Meno crolli. Più continuità nel pomeriggio senza bisogno di stimolanti.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-marker"><div class="tl-dot"></div><div class="tl-period">Dopo 2 mesi</div></div>
+          <div class="tl-body">
+            <h4>La domanda che conta davvero</h4>
+            <p>Chiediti una sola cosa: "Oggi mi riprendo meglio rispetto a quando ho iniziato?" Non quanto riesci a spingere. Ma quanto riesci a tornare.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer-box">
+        <p><strong>Nota importante.</strong> REGEN PRO non è un farmaco. Non cura malattie. Non promette di invertire l'invecchiamento. Sostiene, attraverso una formulazione Day/Night, i normali processi fisiologici coinvolti nel metabolismo energetico e nel recupero.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ TESTIMONIANZE ═══════════════ -->
+  <section id="testimonianze">
+    <div class="testi-hd afu">
+      <div class="section-tag">Recensioni</div>
+      <h2>Quello che raccontano<br>le persone che lo usano</h2>
+      <p>Quasi nessuno racconta di essersi svegliato improvvisamente trasformato. La maggior parte dice qualcosa di molto più interessante.</p>
+    </div>
+
+    <div class="testi-grid container-wide">
+      <div class="testi-card ph">
+        <div class="ph-icon">&#128172;</div>
+        <p><em>[Testimonianza 1 da inserire]</em><small>Nome, età, professione</small></p>
+      </div>
+      <div class="testi-card ph">
+        <div class="ph-icon">&#128172;</div>
+        <p><em>[Testimonianza 2 da inserire]</em><small>Nome, età, professione</small></p>
+      </div>
+      <div class="testi-card ph">
+        <div class="ph-icon">&#128172;</div>
+        <p><em>[Testimonianza 3 da inserire]</em><small>Nome, età, professione</small></p>
+      </div>
+    </div>
+
+    <div class="container" style="margin-top:4rem;">
+      <div class="pull-quote" style="border-left-color:var(--border-w);">
+        "Mi sono accorto che il lunedì faceva meno paura."<br>
+        "Mi sono reso conto che non cercavo più il terzo caffè."<br>
+        "Ho capito che la sera avevo ancora qualcosa da dare."
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PER TE ═══════════════ -->
+  <section id="per-te">
+    <div class="per-te-hd afu">
+      <div class="section-tag">Fa per te?</div>
+      <h2>REGEN PRO è per te…<br>e quando non lo è</h2>
+    </div>
+
+    <div class="per-te-grid container-wide">
+      <div class="pt-panel si">
+        <span class="pt-lbl">È per te se…</span>
+        <ul class="pt-list">
+          <li>Ti svegli spesso senza sentirti davvero riposato</li>
+          <li>Hai la sensazione che il weekend non basti più a ricaricarti</li>
+          <li>Arrivi a sera completamente svuotato</li>
+          <li>Vuoi sostenere il tuo organismo, non semplicemente stimolarlo</li>
+          <li>Cerchi un protocollo costruito con una logica precisa</li>
+          <li>Hai superato i quarant'anni e vuoi continuare a vivere, lavorare, allenarti senza sentirti in rincorsa</li>
+          <li>Sai che salute non significa soltanto "non essere malato"</li>
+        </ul>
+      </div>
+      <div class="pt-panel no">
+        <span class="pt-lbl">Non è per te se…</span>
+        <ul class="pt-list">
+          <li>Stai cercando una soluzione miracolosa</li>
+          <li>Vuoi uno stimolante che ti faccia sentire euforico per qualche ora</li>
+          <li>Pensi che un integratore possa sostituire sonno, alimentazione e movimento</li>
+          <li>Non sei disposto a concedere al tuo corpo il tempo necessario per adattarsi</li>
+          <li>Vuoi risultati immediati</li>
+        </ul>
+        <p class="pt-note">Preferiamo promettere meno. E costruire qualcosa che abbia senso anche tra sei mesi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ COSA RICEVI ═══════════════ -->
+  <section id="cosa-ricevi">
+    <div class="ricevi-hd afu">
+      <div class="section-tag">Il tuo ordine</div>
+      <h2>Cosa ricevi<br>con REGEN PRO</h2>
+    </div>
+
+    <div class="ricevi-grid container-wide">
+      <div class="r-item"><div class="r-check">&#10003;</div><div class="r-text">Formula <strong>REGEN PRO DAY</strong></div></div>
+      <div class="r-item"><div class="r-check">&#10003;</div><div class="r-text">Formula <strong>REGEN PRO NIGHT</strong></div></div>
+      <div class="r-item"><div class="r-check">&#10003;</div><div class="r-text">Protocollo completo di assunzione</div></div>
+      <div class="r-item"><div class="r-check">&#10003;</div><div class="r-text">Istruzioni dettagliate per ottenere il massimo dal protocollo</div></div>
+      <div class="r-item"><div class="r-check">&#10003;</div><div class="r-text">Assistenza del nostro team per qualsiasi dubbio</div></div>
+      <div class="r-item"><div class="r-check">&#10003;</div><div class="r-text"><strong>Garanzia Soddisfatto o Rimborsato</strong> — 60 giorni</div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FAQ ═══════════════ -->
+  <section id="faq">
+    <div class="faq-hd afu">
+      <div class="section-tag">FAQ</div>
+      <h2>Domande frequenti</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="tFaq(this)">Quanto tempo serve prima di notare i primi cambiamenti?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Ogni persona è diversa. Per questo preferiamo non promettere tempi uguali per tutti. Molti clienti raccontano di aver iniziato a percepire un risveglio più leggero nelle prime settimane. Il nostro consiglio: utilizza REGEN PRO con costanza per almeno 60 giorni. Non giudicarlo da una singola giornata. Osserva come cambia il tuo modo di recuperare settimana dopo settimana.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="tFaq(this)">Posso prenderlo anche se dormo già abbastanza?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sì. Dormire e recuperare non sono la stessa cosa. Puoi passare molte ore a letto e continuare comunque a svegliarti con la sensazione di non esserti ripreso davvero. REGEN PRO nasce proprio per sostenere i processi fisiologici coinvolti nel recupero, non semplicemente il numero di ore di sonno.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="tFaq(this)">Posso assumerlo insieme ad altri integratori?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Nella maggior parte dei casi sì. Se però stai seguendo una terapia farmacologica, sei in gravidanza, stai allattando o hai particolari condizioni mediche, ti consigliamo di confrontarti con il tuo medico prima dell'utilizzo.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="tFaq(this)">È adatto sia agli uomini che alle donne?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sì. REGEN PRO è stato sviluppato per uomini e donne che desiderano sostenere il metabolismo energetico durante il giorno e il recupero fisiologico durante la notte.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="tFaq(this)">Per quanto tempo posso utilizzarlo?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">REGEN PRO è pensato per entrare a far parte della tua routine. Così come alimentazione, movimento e sonno non sono interventi di pochi giorni, anche il recupero è un processo continuo.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="tFaq(this)">È uno stimolante?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">No. REGEN PRO non è stato progettato per creare un effetto "carica". L'obiettivo del protocollo è sostenere il normale funzionamento dell'organismo durante il giorno e favorire un contesto fisiologico favorevole al recupero durante la notte.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ GARANZIA ═══════════════ -->
+  <section id="garanzia">
+    <div class="gar-box">
+      <div class="gar-badge">&#128737;&#65039;</div>
+      <h2>Garanzia Soddisfatto<br>o Rimborsato — 60 giorni</h2>
+      <div class="divider" style="margin:1.25rem auto;"></div>
+      <p>Quando acquisti online una cosa è fondamentale: la fiducia. Ed è giusto che il rischio non sia tutto sulle tue spalle. Hai tutto il tempo per seguire il protocollo con costanza e capire se è adatto a te. Se al termine del periodo previsto ritieni che REGEN PRO non faccia per te, ti basterà contattare il nostro servizio clienti. Vogliamo che la tua decisione sia serena. Perché crediamo che un buon prodotto debba convincere con l'esperienza. Non con la pressione.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CTA FINALE ═══════════════ -->
+  <section id="cta-finale">
+    <div class="glow-blob blob-cta"></div>
+    <div class="cta-inner">
+      <div class="section-tag">È il momento di iniziare</div>
+      <h2>Pronto a smettere di vivere<br>costantemente in debito<br>con il tuo corpo?</h2>
+
+      <div class="cta-prose">
+        <p>Forse non ti senti malato. Probabilmente continui a fare tutto quello che hai sempre fatto. Lavori. Ti prendi cura della tua famiglia. Cerchi di allenarti. Vai avanti.</p>
+        <p>Da fuori, nessuno direbbe che c'è qualcosa che non va. Ma tu lo sai. Sai cosa significa arrivare a sera senza margine.</p>
+        <p>Per troppo tempo ti hanno detto che era normale. Che era l'età. Che dovevi semplicemente accettarlo.</p>
+        <p>Il punto non è tornare ad avere vent'anni. Il punto è smettere di vivere costantemente in debito con il tuo corpo. Perché quando recuperi meglio… cambia il modo in cui vivi le tue giornate. Cambia il modo in cui lavori. Ti alleni. Stai con la tua famiglia.</p>
+      </div>
+
+      <div class="cta-acts">
+        <a href="#" class="btn-gold" style="font-size:1.1rem; padding:1.2rem 3rem;">&#128073; Ordina ora REGEN PRO</a>
+        <p class="cta-micro">Garanzia 60 giorni soddisfatto o rimborsato &middot; Nessun rischio</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="ft-brand">REGEN PRO</div>
+    <ul class="ft-links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Termini</a></li>
+      <li><a href="#">Cookie</a></li>
+      <li><a href="#">Contatti</a></li>
+    </ul>
+    <span class="ft-copy">&copy; 2026 REGEN PRO. Tutti i diritti riservati. Prodotto alimentare, non un farmaco.</span>
+  </footer>
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // HERO
+    gsap.set(['#hero h1','.hero-sub','.hero-actions','.hero-stats'], { y: 40 });
+    const htl = gsap.timeline({ defaults: { ease:'power3.out', duration:0.7 } });
+    htl
+      .to('.hero-eyebrow', { opacity:1, y:0, duration:0.6 })
+      .to('#hero h1',      { opacity:1, y:0 }, '-=0.35')
+      .to('.hero-line',    { opacity:1, duration:0.5 }, '-=0.3')
+      .to('.hero-sub',     { opacity:1, y:0 }, '-=0.4')
+      .to('.hero-actions', { opacity:1, y:0 }, '-=0.4')
+      .to('.hero-stats',   { opacity:1, y:0 }, '-=0.3');
+
+    // Counter
+    ScrollTrigger.create({
+      trigger: '.hero-stats', start: 'top 90%', once: true,
+      onEnter() {
+        const el = document.querySelector('[data-count]');
+        if (!el) return;
+        gsap.to({ v:0 }, {
+          v: +el.dataset.count, duration:1.5, ease:'power2.out',
+          onUpdate() { el.textContent = Math.round(this.targets()[0].v); }
+        });
+      }
+    });
+
+    // Pull quotes
+    gsap.utils.toArray('.pull-quote').forEach(el => {
+      gsap.to(el, { opacity:1, x:0, duration:0.7, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 86%' } });
+    });
+
+    // Generic fade-up
+    gsap.utils.toArray('.afu').forEach(el => {
+      gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 85%' } });
+    });
+
+    // Debt rows
+    gsap.utils.toArray('.debt-row').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.5, delay:i*0.1, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 90%' } });
+    });
+
+    // Debito box
+    gsap.to('.debito-box', { opacity:1, y:0, duration:0.7, ease:'power3.out',
+      scrollTrigger: { trigger:'.debito-box', start:'top 85%' } });
+
+    // Errore cards
+    gsap.utils.toArray('.errore-card').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.6, delay:i*0.12, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 86%' } });
+    });
+
+    // DN panels
+    gsap.utils.toArray('.dn-panel').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.6, delay:i*0.15, ease:'power3.out',
+        scrollTrigger: { trigger:'.dn-grid', start:'top 80%' } });
+    });
+
+    // Timeline
+    gsap.utils.toArray('.tl-item').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.6, delay:i*0.15, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 86%' } });
+    });
+
+    // Disclaimer
+    gsap.to('.disclaimer-box', { opacity:1, y:0, duration:0.6, ease:'power3.out',
+      scrollTrigger: { trigger:'.disclaimer-box', start:'top 86%' } });
+
+    // Testi cards
+    gsap.utils.toArray('.testi-card').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.6, delay:i*0.1, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 86%' } });
+    });
+
+    // Per te panels
+    gsap.utils.toArray('.pt-panel').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.6, delay:i*0.15, ease:'power3.out',
+        scrollTrigger: { trigger:'.per-te-grid', start:'top 80%' } });
+    });
+
+    // Ricevi items
+    gsap.utils.toArray('.r-item').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.5, delay:i*0.08, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 88%' } });
+    });
+
+    // FAQ items
+    gsap.utils.toArray('.faq-item').forEach((el,i) => {
+      gsap.to(el, { opacity:1, y:0, duration:0.5, delay:i*0.07, ease:'power3.out',
+        scrollTrigger: { trigger:el, start:'top 88%' } });
+    });
+
+    // Garanzia + CTA
+    gsap.to('.gar-box',   { opacity:1, y:0, duration:0.7, ease:'power3.out', scrollTrigger:{ trigger:'.gar-box', start:'top 80%' } });
+    gsap.to('.cta-inner', { opacity:1, y:0, duration:0.8, ease:'power3.out', scrollTrigger:{ trigger:'.cta-inner', start:'top 80%' } });
+
+    // Nav border on scroll
+    ScrollTrigger.create({
+      start: 1,
+      onUpdate: s => {
+        document.getElementById('nav').style.borderBottomColor =
+          s.progress > 0 ? 'rgba(200,147,58,0.22)' : 'rgba(200,147,58,0.12)';
+      }
+    });
+
+    // FAQ accordion
+    function tFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!open) item.classList.add('open');
+    }
+    window.tFaq = tFaq;
+  </script>
+</body>
+</html>
