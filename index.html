@@ -1060,59 +1060,51 @@
     <span class="ft-copy">&copy; 2026 REGEN PRO. Tutti i diritti riservati. Prodotto alimentare, non un farmaco.</span>
   </footer>
 
-  <!-- GSAP (defer per non bloccare rendering) -->
+  <!-- GSAP solo per le animazioni (no ScrollTrigger) -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
-    // Aspetta che GSAP (defer) sia pronto
     window.addEventListener('load', function() {
-    gsap.registerPlugin(ScrollTrigger);
 
-    // Hero: animazione immediata al caricamento
-    const heroEls = document.querySelectorAll('#hero .reveal');
-    gsap.set(heroEls, { opacity: 0, y: 28 });
-    gsap.to(heroEls, {
-      opacity: 1, y: 0,
-      duration: 0.7, ease: 'power3.out',
-      stagger: 0.12, delay: 0.15
-    });
+      // Hero: animazione immediata
+      const heroEls = document.querySelectorAll('#hero .reveal');
+      gsap.set(heroEls, { opacity: 0, y: 28 });
+      gsap.to(heroEls, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.12, delay: 0.15 });
 
-    // Tutte le altre sezioni: scroll reveal
-    const scrollEls = document.querySelectorAll('section:not(#hero) .reveal');
-    gsap.set(scrollEls, { opacity: 0, y: 22 });
-    ScrollTrigger.batch(scrollEls, {
-      start: 'top 92%',
-      onEnter: batch => gsap.to(batch, {
-        opacity: 1, y: 0,
-        duration: 0.6, ease: 'power3.out',
-        stagger: 0.07
-      })
-    });
+      // Scroll reveal via IntersectionObserver (no forced reflow)
+      const scrollEls = document.querySelectorAll('section:not(#hero) .reveal');
+      gsap.set(scrollEls, { opacity: 0, y: 22 });
+      const io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            gsap.to(entry.target, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+            io.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      scrollEls.forEach(function(el) { io.observe(el); });
 
-    // Nav shadow
-    ScrollTrigger.create({
-      start: 1,
-      onUpdate: s => document.getElementById('nav').classList.toggle('scrolled', s.progress > 0)
-    });
+      // Nav shadow via scroll event passivo
+      var nav = document.getElementById('nav');
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 0);
+      }, { passive: true });
 
-    // Sticky mobile CTA: appare dopo la hero
-    const sc = document.getElementById('stickyCta');
-    if (window.innerWidth < 680) {
-      ScrollTrigger.create({
-        trigger: '#hero',
-        start: 'bottom top',
-        onEnter: () => sc.style.display = 'block',
-        onLeaveBack: () => sc.style.display = 'none'
-      });
-    }
+      // Sticky mobile CTA via IntersectionObserver
+      var sc = document.getElementById('stickyCta');
+      if (sc && window.innerWidth < 680) {
+        var heroObs = new IntersectionObserver(function(entries) {
+          sc.style.display = entries[0].isIntersecting ? 'none' : 'block';
+        }, { threshold: 0 });
+        heroObs.observe(document.getElementById('hero'));
+      }
 
     }); // end load
 
-    // FAQ accordion (non dipende da GSAP)
+    // FAQ accordion
     function tFaq(btn) {
-      const item = btn.closest('.faq-item');
-      const wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      var item = btn.closest('.faq-item');
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(i) { i.classList.remove('open'); });
       if (!wasOpen) item.classList.add('open');
     }
     window.tFaq = tFaq;
